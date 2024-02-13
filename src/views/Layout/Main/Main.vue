@@ -11,11 +11,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#main-wrap{
-    position: fixed;
-    left: 201px;
-    top: 50px;
-    right: 201px;
+#main-wrap {
 
+margin-left: 60px;
+margin-right: 60px;
+ 
 }
+
 </style>

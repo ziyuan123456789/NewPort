@@ -16,7 +16,10 @@
                     <p class="experiment-introduction">
                         模拟客货滚装码头前沿作业区行人流、车流的交通行为，支持实时显示交通流密度。利用实验教学平台，观测码头前沿作业状态，探究功能区划分以及交通组织形式对客货滚装码头交通流的影响，掌握客货滚装码头前沿装卸工艺流程，认识客货滚装码头的绿色评价指标
                     </p>
-                    <el-button type="primary" icon="el-icon-edit" @click="doExperiment()">我要做实验</el-button>
+                    <el-button v-if="checkRole()" type="primary" icon="el-icon-edit"
+                        @click="doExperiment()">我要做实验</el-button>
+                    <el-button v-if="!checkRole()" type="primary" icon="el-icon-edit"
+                        @click="doExperiment()">编辑实验</el-button>
                 </div>
             </el-card>
 
@@ -82,16 +85,47 @@
 
         </el-main>
     </el-container>
-    <el-dialog v-model="isNotLogin" title="请登录" width="25%" center>
+    <el-dialog v-model="isNotLogin" title="请登录" width="30%" center>
         <span>
             本实验需要登录才能做实验,是否前往登录界面?
         </span>
         <template #footer>
             <div class="dialog-footer">
                 <el-button @click="isNotLogin = false">取消</el-button>
-                <el-button type="primary" @click="isNotLogin = false">
-                    确认
-                </el-button>
+                <router-link to="/login" style="margin-left:20px">
+                    <el-button type="primary" @click="isNotLogin = false">
+                        确认
+                    </el-button>
+                </router-link>
+            </div>
+        </template>
+    </el-dialog>
+    <el-dialog v-model="studentRouter" title="做实验" width="30%" center>
+        <span>
+            跳转到做实验页面
+        </span>
+        <template #footer>
+            <div class="dialog-footer">
+                <el-button @click="studentRouter = false">取消</el-button>
+                <router-link to="/student/StudentListMaintenance" style="margin-left:20px">
+                    <el-button type="primary" @click="studentRouter = false">
+                        确认
+                    </el-button>
+                </router-link>
+            </div>
+        </template>
+    </el-dialog>
+    <el-dialog v-model="teacherRouter" title="编辑实验" width="30%" center>
+        <span>
+            跳转到编辑实验页面(未开放)
+        </span>
+        <template #footer>
+            <div class="dialog-footer">
+                <el-button @click="teacherRouter = false">取消</el-button>
+                
+                    <el-button type="primary" @click="teacherRouter = false">
+                        确认
+                    </el-button>
             </div>
         </template>
     </el-dialog>
@@ -111,19 +145,38 @@ export default {
                 { value: 735, name: '良好' },
                 { value: 580, name: '不及格' },
             ],
+            studentRouter:false,
+            teacherRouter:false
         };
     },
     mounted() {
         this.initPieChart();
     },
+    computed: {
+
+    },
     methods: {
+        checkRole() {
+            const loginData = JSON.parse(localStorage.getItem("loginData"))
+            if (loginData && loginData.role == '1') {
+                return false
+            } else {
+                return true
+            }
+        },
+
         doExperiment() {
             this.loginData = JSON.parse(localStorage.getItem("loginData"))
+            
             if (this.loginData == null) {
-
                 this.isNotLogin = true
             } else {
-
+                if(this.loginData.role=='1'){
+                    this.teacherRouter=true
+                }else{
+                    this.studentRouter=true
+                }
+                // this.$router.push({ name: 'Detail', params: { id: id } });
                 return this.isNotLogin = false
             }
         },
@@ -226,7 +279,7 @@ export default {
 }
 
 .experiment-introduction-container {
-    margin: 30px auto;
+
     max-width: 1200px;
 }
 
@@ -269,10 +322,7 @@ export default {
     padding: 10px;
 }
 
-.experiment-title {
-    margin-bottom: 15px;
-
-}
+.experiment-title {}
 
 .experiment-introduction {
     text-indent: 2em;
@@ -321,4 +371,5 @@ export default {
     /* 在标签和值之间设置一点间距 */
 }
 
-/* 响应式设计，根据屏幕宽度调整显示 */</style>
+/* 响应式设计，根据屏幕宽度调整显示 */
+</style>

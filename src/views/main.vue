@@ -3,7 +3,6 @@
 
     <el-main>
       <InfoCard>
-        
       </InfoCard>
 
       <el-row :gutter="20">

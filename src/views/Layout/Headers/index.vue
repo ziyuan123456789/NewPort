@@ -3,8 +3,8 @@
         <el-header>
             <div class="header-flex-container">
                 <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-                    <template v-for="item in menuItems" :key="item.path">
-                        <el-menu-item v-if="item.children.length <= 1" :index="checkUrl(item.path,item.children[0].path)">
+                    <template v-for="item in menuItems()" :key="item.path">
+                        <el-menu-item v-if="item.children.length <= 1" :index="checkUrl(item.path, item.children[0].path)">
                             {{ item.cnName }}
                         </el-menu-item>
                         <el-sub-menu v-else :index="item.path">
@@ -45,25 +45,35 @@ export default {
     },
     watch: {
         '$route'(newRoute) {
-
             this.activeIndex = newRoute.path;
-            console.log( this.activeIndex)
-            console.log( this.$router.resolve(this.activeIndex))
         }
     },
     computed: {
-        menuItems() {
-            let routes = this.$router.options.routes;
-            return routes.filter(item => !item.hidden);
-        },
+
+
 
     },
     methods: {
-        checkUrl(baseurl,childurl){
-            if(childurl==''){
+        menuItems() {
+            let routes = this.$router.options.routes;
+            const userInfo = JSON.parse(localStorage.getItem('loginData'));
+            const userRole = userInfo ? userInfo.role : null;
+            const returnData = routes.filter(route => {
+                if (route.hidden) {
+                    return false;
+                }
+                if (route.needRole && userRole !== route.needRole) {
+                    return false;
+                }
+                return true;
+            });
+            return returnData
+        },
+        checkUrl(baseurl, childurl) {
+            if (childurl == '') {
                 return baseurl
-            }else{
-                return baseurl+'/'+childurl
+            } else {
+                return baseurl + '/' + childurl
             }
         },
         gotoLogin() {
@@ -71,8 +81,8 @@ export default {
             this.$router.push({ name: 'LoginPage' });
         },
         handleSelect(key, keyPath) {
-            if(keyPath.length>1){
-                this.$router.push(keyPath[0]+'/'+keyPath[1]);
+            if (keyPath.length > 1) {
+                this.$router.push(keyPath[0] + '/' + keyPath[1]);
                 return
             }
             console.log(keyPath)
@@ -90,6 +100,8 @@ export default {
         logout() {
             localStorage.removeItem('loginData')
             this.isAdmin = false
+            this.menuItems()
+            this.$router.push('/');
         }
     }
 }

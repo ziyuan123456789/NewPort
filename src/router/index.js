@@ -35,6 +35,7 @@ const routes = [
     name: 'DetailPage',
     cnName: '详情页',
     component: Layout,
+    hidden: true,
     children: [
       {
         path: '',
@@ -45,7 +46,7 @@ const routes = [
         },
         props: true,
         component: () => import('../views/Pages/Port/Detailpage.vue')
-      },
+      }
     ]
   },
   {
@@ -60,7 +61,7 @@ const routes = [
         meta: {
           name: '专题知识'
         },
-        component: () => import('../views/main.vue')
+        component: () => import('../views/Pages/ThematicKnowledge.vue')
       }
     ]
   },
@@ -89,11 +90,83 @@ const routes = [
       {
         path: 'database3',
         name: 'database',
-        cnName:'数据库3',
+        cnName: '数据库3',
         meta: {
           name: '资料库'
         },
         component: () => import('../views/404/404.vue')
+      }
+    ]
+  },
+  {
+    path: '/doexperiment',
+    name: 'doexperiment',
+    cnName: '做实验',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '',
+        name: 'doexperiment',
+        cnName: '做实验',
+        meta: {
+          name: '做实验'
+        },
+        component: () => import('../views/404/404.vue')
+      }
+    ]
+  },
+  {
+    path: '/teacher',
+    name: 'teacher',
+    cnName: '学生管理',
+    needRole: '1',
+    component: Layout,
+    children: [
+      {
+        path: 'StudentListMaintenance',
+        name: 'StudentListMaintenance',
+        cnName: '学生名单维护',
+        meta: {
+          name: '学生名单维护'
+        },
+        component: () => import('../views/404/404.vue')
+      },
+      {
+        path: 'CourseMaintenance',
+        name: 'CourseMaintenance',
+        cnName: '实验管理',
+        meta: {
+          name: '实验管理'
+        },
+        component: () => import('../views/Pages/TeacherView/Main.vue')
+      },
+      {
+        path: 'CourseMain',
+        name: 'CourseMain',
+        cnName: '学科管理',
+        meta: {
+          name: '学科管理'
+        },
+        component: () => import('../views/Pages/TeacherView/checkStudentExp.vue')
+      }
+    ]
+  },
+  {
+    path: '/student',
+    name: 'student',
+    cnName: '做实验',
+    needRole: '0',
+    component: Layout,
+    children: [
+      {
+        path: 'StudentListMaintenance',
+        name: 'StudentListMaintenance',
+        cnName: '学生名单维护',
+        meta: {
+          name: '学生名单维护'
+        },
+        component: () => import('../views/Pages/StudentView/studentView.vue')
       }
     ]
   },
@@ -103,8 +176,7 @@ const routes = [
     cnName: '登陆页面',
     hidden: true,
     component: () => import('../views/Pages/LoginPage.vue')
-  },
-
+  }
 ]
 
 const router = createRouter({
@@ -112,12 +184,12 @@ const router = createRouter({
   routes
 })
 
-const notNeedLogin = ['Home', 'MainPage', 'Detail', 'LoginPage','database']
+const notNeedLogin = ['thematicknowledge','Home', 'MainPage', 'Detail', 'LoginPage', 'database']
 
 router.beforeEach((to, from, next) => {
   const isLoggedIn = !!localStorage.getItem('loginData')
   if (to.name === 'NotFound') {
-    next() 
+    next()
     return
   }
   if (!notNeedLogin.includes(to.name) && !isLoggedIn) {
@@ -127,7 +199,7 @@ router.beforeEach((to, from, next) => {
     })
     next({ name: 'LoginPage' })
   } else {
-    next() 
+    next()
   }
 })
 

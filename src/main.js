@@ -15,11 +15,16 @@ for (let iconName in ElIconModules) {
 }
 const store = new Vuex.Store({
   state: {
-    returnUrl: '' 
+    returnUrl: '' ,
+    isLoggedIn: !!localStorage.getItem('loginData')
   },
   mutations: {
     SET_RETURN_URL(state, url) {
       state.returnUrl = url
+    },
+    logout(state) {
+      state.isLoggedIn = false;
+      localStorage.removeItem('loginData');
     }
   }
 })

@@ -12,8 +12,8 @@
 
       <el-form-item label="权限" prop="role">
         <el-select v-model="form.role">
-          <el-option label="管理员" value="1"></el-option>
-          <el-option label="用户" value="0"></el-option>
+          <el-option label="教师" value="1"></el-option>
+          <el-option label="学生" value="0"></el-option>
         </el-select>
       </el-form-item>
 
@@ -73,6 +73,10 @@ export default {
               message: '登录成功',
               type: 'success',
             });
+            if(this.$store.state.returnUrl.length==0){
+              this.$router.push('/'); 
+              return
+            }
             this.$router.push(this.$store.state.returnUrl); 
           } else {
             ElMessage({
