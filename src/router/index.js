@@ -140,15 +140,43 @@ const routes = [
           name: '实验管理'
         },
         component: () => import('../views/Pages/TeacherView/Main.vue')
-      },
+      }
+    ]
+  },
+  {
+    path: '/teacher',
+    name: 'CourseMain',
+    cnName: '学科管理',
+    needRole:"1",
+    component: Layout,
+    hidden:true,
+    children: [
       {
         path: 'CourseMain',
         name: 'CourseMain',
-        cnName: '学科管理',
+        cnName: '做实验',
         meta: {
-          name: '学科管理'
+          name: '做实验'
         },
         component: () => import('../views/Pages/TeacherView/checkStudentExp.vue')
+      }
+    ]
+  },
+  {
+    path: '/userinfo',
+    name: 'userinfo',
+    cnName: '个人信息',
+    component: Layout,
+    hidden:true,
+    children: [
+      {
+        path: '',
+        name: 'userinfo',
+        cnName: '个人信息',
+        meta: {
+          name: '个人信息'
+        },
+        component: () => import('../views/Pages/GeneralView/UserInfo.vue')
       }
     ]
   },
@@ -184,7 +212,14 @@ const router = createRouter({
   routes
 })
 
-const notNeedLogin = ['thematicknowledge','Home', 'MainPage', 'Detail', 'LoginPage', 'database']
+const notNeedLogin = [
+  'thematicknowledge',
+  'Home',
+  'MainPage',
+  'Detail',
+  'LoginPage',
+  'database'
+]
 
 router.beforeEach((to, from, next) => {
   const isLoggedIn = !!localStorage.getItem('loginData')

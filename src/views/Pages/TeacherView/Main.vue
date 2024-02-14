@@ -38,37 +38,55 @@
     <!-- <el-select v-model="selectClassGroupId" @change="changeClassGroup()" placeholder="请选择专业" size="large">
       <el-option v-for="item in ClassGroup" :key="item.id" :label="item.groupname" :value="item.id" />
     </el-select> -->
-    <el-select v-model="selectClassId" @change="changeClass()" placeholder="请选择班级" size="large"
-      no-data-text="请先选择专业才可选择课程">
-      <el-option v-for="item in selectClassInfo" :key="item.id" :label="item.classname" :value="item.id" />
-    </el-select>
-    <el-select v-model="selectHomeworkId" @change="changeHomework()" placeholder="请选择实验" size="large"
-      no-data-text="请先选择课程才可选择实验">
-      <el-option v-for="item in selectHomeworkInfo" :key="item.id" :label="item.homeworkname" :value="item.id" />
-    </el-select>
-    <el-button size="middle" type="warning" @click="downloadAllHomework()">下载全部实验</el-button>
+    <el-row :gutter="20">
+      <el-col :span="4"><el-select v-model="selectClassId" @change="changeClass()" placeholder="请选择班级" size="large"
+          no-data-text="请先选择专业才可选择课程">
+          <el-option v-for="item in selectClassInfo" :key="item.id" :label="item.classname" :value="item.id" />
+        </el-select>
+      </el-col>
+      <el-col :span="4">
+        <el-select v-model="selectHomeworkId" @change="changeHomework()" placeholder="请选择实验" size="large"
+          no-data-text="请先选择课程才可选择实验">
+          <el-option v-for="item in selectHomeworkInfo" :key="item.id" :label="item.homeworkname" :value="item.id" />
+        </el-select>
+      </el-col>
+      <el-col :span="4">
+        <el-button style="height:40px" size="middle" type="warning" @click="downloadAllHomework()">下载全部实验</el-button>
+      </el-col>
+    </el-row>
+
     <div>
-      <el-table :data="studentsHomeworkInfo" style="width: 100%" :row-class-name="tableRowClassName">
-        <el-table-column label="序号" type="index" width="10" align="center">
+      <el-table :data="studentsHomeworkInfo" :row-class-name="tableRowClassName">
+        <el-table-column label="序号" type="index"  align="center" >
         </el-table-column>
-        <el-table-column prop="sname" width="150" label="学生姓名" align="center">
+        <el-table-column prop="sname" label="学生姓名" align="center" min-width="50">
         </el-table-column>
-        <el-table-column prop="starttime" width="100" label="开课时间" align="center">
+        <el-table-column prop="starttime" label="开课时间" align="center">
         </el-table-column>
-        <el-table-column prop="class" width="200" label="班级" align="center">
+        <el-table-column prop="class" label="班级" align="center">
         </el-table-column>
-        <el-table-column prop="filehome" width="200" label="实验名" align="center">
+        <el-table-column prop="filehome" label="实验名" align="center" min-width="70">
         </el-table-column>
-        <el-table-column prop="score" label="成绩" width="100" align="center">
+        <el-table-column prop="score" label="成绩" align="center">
         </el-table-column>
-        <el-table-column align="center" label="操作">
+        <el-table-column label="评分" align="center" min-width="50">
           <template #default="scope">
-            <el-button size="middle" type="success" @click="rating(scope.row)">查看实验结果</el-button>
-            <el-button size="middle" type="success" @click="downloadHomeworkById(scope.row)">下载实验</el-button>
-            <el-button size="middle" type="success" @click="rating(scope.row)">评分</el-button>
+            <el-input v-model="scope.row.grade"></el-input>
           </template>
         </el-table-column>
+        <el-table-column align="center" label="操作" min-width="220">
+          <template #default="scope">
+            <div class="button-group" style="text-align:center">
+              <el-button class="action-button" type="primary" @click="rating(scope.row)">查看实验结果</el-button>
+              <el-button class="action-button" type="success" @click="downloadHomeworkById(scope.row)">下载实验</el-button>
+              <el-button class="action-button" type="warning" @click="rating(scope.row)">保存评分</el-button>
+            </div>
+          </template>
+
+
+        </el-table-column>
       </el-table>
+
     </div>
 
   </el-card>
@@ -139,8 +157,9 @@ export default {
       studentsHomeworkInfo: [
         {
           sname: 'test',
-          class:"医工20002",
-          starttime:"2023/12",
+          grade: '',
+          class: "医工20002",
+          starttime: "2023/12",
           filehome: '数学实验',
           state: '实验已提交',
           score: '95',
@@ -149,8 +168,9 @@ export default {
         },
         {
           sname: 'test',
-          class:"医工20002",
-          starttime:"2023/12",
+          grade: '',
+          class: "医工20002",
+          starttime: "2023/12",
           filehome: '物理实验',
           state: '实验已经过期',
           score: '未评分',
@@ -159,8 +179,9 @@ export default {
         },
         {
           sname: 'test',
-          class:"医工20002",
-          starttime:"2023/12",
+          grade: '',
+          class: "医工20002",
+          starttime: "2023/12",
           filehome: '化学实验',
           state: '实验进行中',
           score: '待提交',
@@ -169,8 +190,9 @@ export default {
         },
         {
           sname: 'test',
-          class:"医工20002",
-          starttime:"2023/12",
+          grade: '',
+          class: "医工20002",
+          starttime: "2023/12",
           filehome: '生物实验',
           state: '实验已提交',
           score: '88',
@@ -179,8 +201,9 @@ export default {
         },
         {
           sname: 'test',
-          class:"医工20002",
-          starttime:"2023/12",
+          grade: '',
+          class: "医工20002",
+          starttime: "2023/12",
           filehome: '地理实验',
           state: '实验进行中',
           score: '待提交',
@@ -200,6 +223,14 @@ export default {
     };
   },
   methods: {
+    tableRowClassName({ row, rowIndex }) {
+      if (row.score == '未评分') {
+        return 'warning-row';
+      } else if (row.score == '待提交') {
+        return 'error-row';
+      }
+      return '';
+    },
     changeStudentClassGroup() {
 
       axios.get('http://localhost:8089/getHomeworkInfoByClassId', {
@@ -482,6 +513,14 @@ export default {
 <style>
 .containner {
   margin-top: 20px
+}
+
+.el-table .warning-row {
+  background: rgba(204, 224, 255, 0.477)
+}
+
+.el-table .error-row {
+  background: #fae9e4;
 }
 </style>
       
