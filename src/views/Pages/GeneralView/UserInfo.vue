@@ -18,7 +18,15 @@
               </div>
               <div class="mhy-account-center-header__buttons">
                 <div>
-                  <el-button type="primary" @click="updateMyInfo">编辑</el-button>
+                  <el-row :gutter="10">
+                    <el-col :span="12">
+                      <el-button type="primary" @click="updateMyInfo">编辑</el-button>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-button type="warning" @click="dialogVisiblePassword = true">修改密码</el-button>
+                    </el-col>
+                  </el-row>
+
                 </div>
 
               </div>
@@ -93,19 +101,47 @@
     </template>
 
   </el-dialog>
+
+  <el-dialog title="修改密码" v-model="dialogVisiblePassword" width="40%" center>
+    <el-form label-position="top" :model="passwordPair">
+      <el-form-item label="原密码">
+        <el-input type="password" v-model="passwordPair.oldPassword"></el-input>
+      </el-form-item>
+      <el-form-item label="新密码">
+        <el-input type="password" v-model="passwordPair.newPassword"></el-input>
+      </el-form-item>
+      <el-form-item label="密码确认">
+        <el-input type="password" v-model="passwordPair.newPasswordConfirm"></el-input>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="dialogVisiblePassword = false">取消</el-button>
+        <el-button type="primary" @click="submitPasswordChange">保存修改</el-button>
+      </div>
+    </template>
+
+  </el-dialog>
 </template>
 
 <script>
+import { ElMessage } from 'element-plus'
 export default {
   data() {
     return {
       dialogVisible: false,
+      dialogVisiblePassword: false,
+      passwordPair: {
+        oldPassword: '',
+        newPassword: '',
+        newPasswordConfirm: ''
+      },
       userInfo: {
-        nickname: '',
+        nickname: 'Wzy',
         gender: 'male',
-        email: '',
-        phone: '',
-        address: ''
+        email: '313',
+        phone: '114',
+        address: '大连'
       },
       activeIndex: '/index',
       menus: [
@@ -121,6 +157,26 @@ export default {
     }, 300);
   },
   methods: {
+    submitPasswordChange() {
+      if (this.passwordPair.newPassword === this.passwordPair.newPasswordConfirm) {
+        this.dialogVisiblePassword = false,
+          this.passwordPair = {
+            oldPassword: '',
+            newPassword: '',
+            newPasswordConfirm: ''
+          }
+      } else {
+        ElMessage({
+          message: '两次密码不一致',
+          type: 'error'
+        })
+        this.passwordPair.newPassword = ''
+        this.passwordPair.newPasswordConfirm = ''
+
+      }
+
+
+    },
     submitForm() {
       console.log('提交表单:', this.userInfo);
       // 在这里执行表单提交操作，例如发送请求到后端API
@@ -135,8 +191,8 @@ export default {
       this.$router.push({ path: item.path });
     },
     updateMyInfo() {
-  
-      this.dialogVisible=true
+
+      this.dialogVisible = true
     }
   }
 };
@@ -146,6 +202,7 @@ export default {
 .dialog-footer {
   text-align: center;
 }
+
 .root-page-container {
   height: 85vh;
   margin-top: 20px
@@ -320,4 +377,5 @@ a {
   -ms-flex-align: center;
   align-items: center;
   cursor: pointer;
-}</style>
+}
+</style>

@@ -124,20 +124,20 @@ const routes = [
     component: Layout,
     children: [
       {
-        path: 'StudentListMaintenance',
-        name: 'StudentListMaintenance',
+        path: 'StudentListManage',
+        name: 'StudentListManage',
         cnName: '学生名单维护',
         meta: {
           name: '学生名单维护'
         },
-        component: () => import('../views/404/404.vue')
+        component: () => import('../views/Pages/TeacherView/StudentContro.vue')
       },
       {
         path: 'CourseMaintenance',
         name: 'CourseMaintenance',
-        cnName: '实验管理',
+        cnName: '实验成绩管理',
         meta: {
-          name: '实验管理'
+          name: '实验成绩管理'
         },
         component: () => import('../views/Pages/TeacherView/Main.vue')
       }
@@ -190,9 +190,9 @@ const routes = [
       {
         path: 'StudentListMaintenance',
         name: 'StudentListMaintenance',
-        cnName: '学生名单维护',
+        cnName: '做实验',
         meta: {
-          name: '学生名单维护'
+          name: '做实验'
         },
         component: () => import('../views/Pages/StudentView/studentView.vue')
       }

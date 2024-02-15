@@ -102,7 +102,7 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 .login-box {
   width: 350px;
   margin: 120px auto;

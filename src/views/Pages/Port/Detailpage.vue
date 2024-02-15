@@ -4,22 +4,41 @@
             <el-card class="experiment-info-card">
 
                 <div class="experiment-header">
-                    <h2 class="experiment-title">客货滚装码头前沿精细化布置实验系统</h2>
-                    <div class="experiment-meta">
-                        <div>作者:<em>Nue</em></div>
-                        <div>上线时间:<em>2024/2/9</em></div>
-                    </div>
-                    <div class="experiment-categories">
-                        <el-tag>所属专业类:船舶</el-tag>
-                        <el-tag>所属课程:船舶</el-tag>
-                    </div>
-                    <p class="experiment-introduction">
-                        模拟客货滚装码头前沿作业区行人流、车流的交通行为，支持实时显示交通流密度。利用实验教学平台，观测码头前沿作业状态，探究功能区划分以及交通组织形式对客货滚装码头交通流的影响，掌握客货滚装码头前沿装卸工艺流程，认识客货滚装码头的绿色评价指标
-                    </p>
-                    <el-button v-if="checkRole()" type="primary" icon="el-icon-edit"
-                        @click="doExperiment()">我要做实验</el-button>
-                    <el-button v-if="!checkRole()" type="primary" icon="el-icon-edit"
-                        @click="doExperiment()">编辑实验</el-button>
+                    <el-row :gutter="20">
+                        <el-col :span="15">
+                            <h2 class="experiment-title">客货滚装码头前沿精细化布置实验系统</h2>
+                            <div class="experiment-meta">
+                                <div>作者:<em>Nue</em></div>
+                                <div>上线时间:<em>2024/2/9</em></div>
+                            </div>
+                            <div class="experiment-categories">
+                                <el-tag>所属专业类:船舶</el-tag>
+                                <el-tag>所属课程:船舶</el-tag>
+                            </div>
+                            <p class="experiment-introduction">
+                                模拟客货滚装码头前沿作业区行人流、车流的交通行为，支持实时显示交通流密度。利用实验教学平台，观测码头前沿作业状态，探究功能区划分以及交通组织形式对客货滚装码头交通流的影响，掌握客货滚装码头前沿装卸工艺流程，认识客货滚装码头的绿色评价指标
+                            </p>
+                            <el-button v-if="checkRole()" type="primary" icon="el-icon-edit"
+                                @click="doExperiment()">我要做实验</el-button>
+                            <el-button v-if="!checkRole()" type="primary" icon="el-icon-edit"
+                                @click="doExperiment()">编辑实验</el-button>
+                        </el-col>
+                        <el-col :span="9">
+
+                            <div class="image-container">
+                                <el-image
+                                style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 200px; object-fit: cover;"
+                                :src="imgurl"
+                                :fit="fit">
+                              </el-image>
+                              
+
+                            </div>
+
+                        </el-col>
+
+                    </el-row>
+
                 </div>
             </el-card>
 
@@ -122,10 +141,10 @@
         <template #footer>
             <div class="dialog-footer">
                 <el-button @click="teacherRouter = false">取消</el-button>
-                
-                    <el-button type="primary" @click="teacherRouter = false">
-                        确认
-                    </el-button>
+
+                <el-button type="primary" @click="teacherRouter = false">
+                    确认
+                </el-button>
             </div>
         </template>
     </el-dialog>
@@ -138,6 +157,7 @@ export default {
     name: 'RatingCard',
     data() {
         return {
+            imgurl: require('@/assets/Pages/port1.png'),
             isNotLogin: false,
             rating: 4.7,
             pieChartData: [
@@ -145,8 +165,8 @@ export default {
                 { value: 735, name: '良好' },
                 { value: 580, name: '不及格' },
             ],
-            studentRouter:false,
-            teacherRouter:false
+            studentRouter: false,
+            teacherRouter: false
         };
     },
     mounted() {
@@ -167,14 +187,14 @@ export default {
 
         doExperiment() {
             this.loginData = JSON.parse(localStorage.getItem("loginData"))
-            
+
             if (this.loginData == null) {
                 this.isNotLogin = true
             } else {
-                if(this.loginData.role=='1'){
-                    this.teacherRouter=true
-                }else{
-                    this.studentRouter=true
+                if (this.loginData.role == '1') {
+                    this.teacherRouter = true
+                } else {
+                    this.studentRouter = true
                 }
                 // this.$router.push({ name: 'Detail', params: { id: id } });
                 return this.isNotLogin = false
@@ -229,6 +249,11 @@ export default {
 
 
 <style scoped>
+.image-container {
+    position: relative;
+    height: 300px;
+}
+
 .rating-card {
     height: auto;
     padding: 20px;
@@ -279,8 +304,9 @@ export default {
 }
 
 .experiment-introduction-container {
-
-    max-width: 1200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .experiment-details {
