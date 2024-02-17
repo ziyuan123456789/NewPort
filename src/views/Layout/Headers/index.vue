@@ -21,12 +21,12 @@
                         </el-dropdown>
                     </div>
                 </div>
-                
+
 
                 <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
                     background-color="#f0f9ff">
                     <template v-for="item in menuItems()" :key="item.path">
-                        <el-menu-item v-if="item.children.length <= 1" :index="checkUrl(item.path, item.children[0].path)">
+                        <el-menu-item v-if="item.children.length <= 1" :index="checkUrl(item.path, item.children[0])">
                             {{ item.cnName }}
                         </el-menu-item>
                         <el-sub-menu v-else :index="item.path">
@@ -52,7 +52,7 @@ export default {
             activeIndex: this.$route.path,
             isAdmin: false,
             loginData: {},
-            circleUrl:'https://img.zcool.cn/community/01b01b58f906c1a8012049efa20067.jpg@1280w_1l_2o_100sh.jpg'
+            circleUrl: 'https://img.zcool.cn/community/01b01b58f906c1a8012049efa20067.jpg@1280w_1l_2o_100sh.jpg'
 
         };
     },
@@ -70,29 +70,41 @@ export default {
 
     },
     methods: {
-        gotoPersonalCenter(){
+        gotoPersonalCenter() {
             this.$router.push('/userinfo');
         },
         menuItems() {
             let routes = this.$router.options.routes;
             const userInfo = JSON.parse(localStorage.getItem('loginData'));
             const userRole = userInfo ? userInfo.role : null;
-            const returnData = routes.filter(route => {
-                if (route.hidden) {
-                    return false;
-                }
-                if (route.needRole && userRole !== route.needRole) {
-                    return false;
-                }
-                return true;
-            });
-            return returnData
+
+            const filterRoutes = (routes) => {
+                return routes.filter(route => {
+                    if (route.hidden) {
+                        return false;
+                    }
+                    if (route.needRole && userRole !== route.needRole) {
+                        return false;
+                    }
+                    if (route.children && route.children.length > 0) {
+                        
+                        route.children = filterRoutes(route.children);
+                        if (route.children.length === 0) {
+                            return false;
+                        }
+                    }
+                    return true;
+                });
+            };
+
+            return filterRoutes(routes);
         },
+
         checkUrl(baseurl, childurl) {
-            if (childurl == '') {
+            if (childurl.path == '') {
                 return baseurl
             } else {
-                return baseurl + '/' + childurl
+                return baseurl + '/' + childurl.path
             }
         },
         gotoLogin() {
@@ -130,7 +142,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .header-flex-container {
     display: flex;
     justify-content: space-between;
@@ -164,21 +176,29 @@ export default {
     align-items: center;
     cursor: pointer;
 }
+
 .login-container .login-btn {
-    color: #409EFF; /* 按钮文字颜色调整为Element UI主题色 */
-    font-weight: bold; /* 加粗字体，突出显示 */
-    margin-right: 10px; /* 与头像或其他元素间的间距 */
-  }
-  
-  .login-container .welcome-text {
-    color: #409EFF; /* 按钮文字颜色调整为Element UI主题色 */
-    font-weight: bold; /* 加粗字体，突出显示 */
-    margin-right: 10px; 
-    margin-top:3px/* 与头像或下拉按钮间的间距 */
-  }
-  
-  .login-container .el-avatar {
-    border: 2px solid #409EFF; /* 给头像添加边框，增强视觉效果 */
-    margin-left: 10px; /* 确保与前面的文本或按钮有适当间隔 */
-  }
-</style>
+    color: #409EFF;
+    /* 按钮文字颜色调整为Element UI主题色 */
+    font-weight: bold;
+    /* 加粗字体，突出显示 */
+    margin-right: 10px;
+    /* 与头像或其他元素间的间距 */
+}
+
+.login-container .welcome-text {
+    color: #409EFF;
+    /* 按钮文字颜色调整为Element UI主题色 */
+    font-weight: bold;
+    /* 加粗字体，突出显示 */
+    margin-right: 10px;
+    margin-top: 3px
+        /* 与头像或下拉按钮间的间距 */
+}
+
+.login-container .el-avatar {
+    border: 2px solid #409EFF;
+    /* 给头像添加边框，增强视觉效果 */
+    margin-left: 10px;
+    /* 确保与前面的文本或按钮有适当间隔 */
+}</style>

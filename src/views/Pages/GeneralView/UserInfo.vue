@@ -48,7 +48,7 @@
         <!--左侧菜单栏-->
         <div class="mhy-container mhy-side-menu mhy-account-center__menu">
           <header class="mhy-side-menu__header">个人中心</header>
-          <ul class="mhy-side-menu__list">
+          <ul class="mhy-side-menu__list" style="list-style-type: none;">
             <li v-for="(item, index) in menus" :key="index" @click="selMenu(item)">
               <a :class="'mhy-router-link mhy-side-menu__item ' + (activeIndex === item.path ? 'nuxt-link-active' : '')">
                 <i :class="item.icon" style="font-size: 18px;margin-right: 10px;"></i>
@@ -152,7 +152,7 @@ export default {
   },
   mounted() {
     let that = this;
-    setInterval(function () {//定位当前菜单
+    setInterval(function () {
       that.activeIndex = that.$router.currentRoute.path;
     }, 300);
   },
@@ -198,7 +198,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .dialog-footer {
   text-align: center;
 }

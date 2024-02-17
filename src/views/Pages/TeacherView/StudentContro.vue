@@ -1,42 +1,37 @@
 <template>
     <el-card class="containner">
-        <el-row :gutter="20">
-            <el-col :span="4"><el-select v-model="selectClassId" @change="changeClass()" placeholder="选择入学年份" size="large"
-                    no-data-text="请先选择专业才可选择课程">
-                    <el-option v-for="item in selectClassInfo" :key="item.id" :label="item.classname" :value="item.id" />
-                </el-select>
-            </el-col>
-            <el-col :span="4">
-                <el-select v-model="selectHomeworkId" @change="changeHomework()" placeholder="选择学期" size="large"
-                    no-data-text="请先选择课程才可选择实验">
-                    <el-option v-for="item in selectHomeworkInfo" :key="item.id" :label="item.homeworkname"
-                        :value="item.id" />
-                </el-select>
-            </el-col>
-            <el-col :span="4">
-                <el-button style="height:40px" size="middle" type="warning"
-                    @click="downloadAllHomework()">上传生成名单</el-button>
-            </el-col>
-        </el-row>
-
         <div>
-            <el-table :data="studentsHomeworkInfo" :row-class-name="tableRowClassName">
-                <el-table-column type="index"  label="序号" width="60" align="center">
+            <el-button style="height:40px;margin-right:40px" size="middle" type="success">下载生成模板</el-button>
+            <el-button style="height:40px;margin-right:40px" size="middle" type="warning"
+                @click="openUpload()">上传生成名单</el-button>
+        </div>
+    </el-card>
+
+    <el-card class="containner">
+        <div>
+            <el-select style="margin-right:40px" v-model="selectSemester" @change="changeSemester()" placeholder="请选择学年学期"
+                size="large" no-data-text="服务器异常">
+                <el-option v-for="item in selectClassInfo" :key="item.key" :label="item.value" :value="item.value" />
+            </el-select>
+            <el-input @input="selectStudentName()" v-model="inputName" placeholder="输入学生姓名" size="large"
+                style="width:222.2px;margin-right:40px" />
+        </div>
+        <div>
+            <el-table :data="backupStudentsHomeworkInfo" :row-class-name="tableRowClassName">
+                <el-table-column type="index" label="序号" width="60" align="center">
                 </el-table-column>
-                <el-table-column prop="id" label="学号" align="center" min-width="50">
+                <el-table-column prop="id" label="学号" align="center">
                 </el-table-column>
-                <el-table-column prop="sname" label="学生姓名" align="center" min-width="50">
+                <el-table-column prop="sname" label="学生姓名" align="center">
                 </el-table-column>
                 <el-table-column prop="starttime" label="开课时间" align="center">
                 </el-table-column>
 
-                <el-table-column align="center" label="操作" min-width="220">
+                <el-table-column align="center" label="操作">
                     <template #default="scope">
                         <div class="button-group" style="text-align:center">
-                            <el-button class="action-button" type="primary" @click="rating(scope.row)">查看实验结果</el-button>
-                            <el-button class="action-button" type="success"
-                                @click="downloadHomeworkById(scope.row)">下载实验</el-button>
-                            <el-button class="action-button" type="warning" @click="rating(scope.row)">保存评分</el-button>
+
+                            <el-button class="action-button" type="warning" @click="rating(scope.row)">重置密码</el-button>
                         </div>
                     </template>
 
@@ -61,6 +56,17 @@
             </span>
         </template>
     </el-dialog>
+    <el-dialog v-model="openUploadMark" title="名单上传" width="50%">
+        <div style="text-align:center">
+            <el-upload class="upload-demo" drag action="" multiple :before-upload="beforeUpload">
+                <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+                <div class="el-upload__text">拖拽 <em>点击以上传</em></div>
+                <template #tip>
+                    <div class="el-upload__tip">只接受CSV/EXCEL文件</div>
+                </template>
+            </el-upload>
+        </div>
+    </el-dialog>
 </template>
         
 <script>
@@ -71,79 +77,97 @@ import axios from 'axios'
 export default {
     data() {
         return {
+            inputName:'',
+            selectSemester: '',
+            backupStudentsHomeworkInfo: [],
+            openUploadMark: false,
+            selectClassInfo: [
+                { key: 0, value: '全部' },
+                { key: 1, value: '2023年春季' },
+                { key: 2, value: '2023年秋季' },
+                { key: 3, value: '2024年秋季' },
+            ],
             studentsHomeworkInfo: [
                 {
-                    id: '1',
+                    id: '20006380202',
                     sname: 'test',
                     grade: '',
                     class: "医工20002",
-                    starttime: "2023/12",
-                    filehome: '数学实验',
-                    state: '实验已提交',
-                    score: '95',
-                    endtime: '2022-10-05',
-                    reload: '1'
+                    starttime: "2023年春季",
                 },
                 {
-                    id: '2',
+                    id: '20006380203',
                     sname: 'test',
                     grade: '',
                     class: "医工20002",
-                    starttime: "2023/12",
-                    filehome: '物理实验',
-                    state: '实验已经过期',
-                    score: '未评分',
-                    endtime: '2022-09-20',
-                    reload: '0'
+                    starttime: "2023年秋季",
                 },
                 {
-                    id: '3',
+                    id: '20006380203',
                     sname: 'test',
                     grade: '',
                     class: "医工20002",
-                    starttime: "2023/12",
-                    filehome: '化学实验',
-                    state: '实验进行中',
-                    score: '待提交',
-                    endtime: '2022-11-01',
-                    reload: '0'
+                    starttime: "2023年秋季",
                 },
                 {
-                    id: '4',
+                    id: '20006380204',
                     sname: 'test',
                     grade: '',
                     class: "医工20002",
-                    starttime: "2023/12",
-                    filehome: '生物实验',
-                    state: '实验已提交',
-                    score: '88',
-                    endtime: '2022-10-12',
-                    reload: '0'
+                    starttime: "2023年秋季",
                 },
                 {
-                    id: '5',
+                    id: '20006380205',
                     sname: 'test',
                     grade: '',
                     class: "医工20002",
-                    starttime: "2023/12",
-                    filehome: '地理实验',
-                    state: '实验进行中',
-                    score: '待提交',
-                    endtime: '2022-12-15',
-                    reload: '0'
+                    starttime: "2023年秋季",
                 }
             ],
         };
     },
     methods: {
-        tableRowClassName({ row, rowIndex }) {
-            if (row.score == '未评分') {
-                console.log('未评分')
-                return 'warning-row';
-            } else if (row.score == '待提交') {
-                console.log('待提交')
-                return 'error-row';
+        dataChange() {
+            let res = this.studentsHomeworkInfo;
+            if (this.selectSemester !== '全部') {
+                res = res.filter(item => item.starttime.includes(this.selectSemester));
             }
+            if (this.selectState !== '') {
+                res = res.filter(item => item.sname.includes(this.inputName));
+            }
+            this.backupStudentsHomeworkInfo = res;
+        },
+        changeSemester() {
+            this.dataChange()
+        },
+        selectStudentName() {
+            this.dataChange()
+        },
+        beforeUpload(file) {
+            const isCSV = file.type === 'text/csv';
+            const isExcel = file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            const isLt2M = file.size / 1024 / 1024 < 2;
+
+            if (!isCSV && !isExcel) {
+                ElMessage({
+                    message: '上传文件只能是 CSV 或 Excel 格式!',
+                    type: 'error'
+                })
+                return false;
+            }
+            if (!isLt2M) {
+                ElMessage({
+                    message: '上传文件超过2MB大小',
+                    type: 'error'
+                })
+                return false;
+            }
+            return true;
+        },
+        openUpload() {
+            this.openUploadMark = true
+        },
+        tableRowClassName({ row, rowIndex }) {
             return '';
         },
 
@@ -152,7 +176,7 @@ export default {
         },
     },
     mounted() {
-
+        this.backupStudentsHomeworkInfo = JSON.parse(JSON.stringify(this.studentsHomeworkInfo));
     },
     created() {
 
@@ -161,19 +185,19 @@ export default {
 };
 </script>
         
-<style scoped>
+<style lang="scss" scoped>
 .containner {
     margin-top: 20px
 }
 
-.el-table /deep/ .warning-row td {
+.el-table ::v-deep .warning-row td {
     background: rgba(204, 224, 255, 0.477) !important;
 
 }
 
 
 
-.el-table /deep/ .error-row {
+.el-table ::v-deep .error-row {
     background: #fae9e4 !important;
 }
 </style>

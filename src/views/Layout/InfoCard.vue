@@ -27,7 +27,7 @@ export default {
 };
 </script>
   
-<style scoped>
+<style lang="scss" scoped>
 .pdev {
     margin: 12px 0;
     font-size: 16px;

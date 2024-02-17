@@ -69,7 +69,7 @@ export default {
 };
 </script>
   
-<style scoped>
+<style lang="scss" scoped>
 .box-card {
     margin: 20px;
     padding: 20px;

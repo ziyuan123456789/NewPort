@@ -74,7 +74,7 @@ export default {
 }
 </script>
   
-<style scoped>
+<style lang="scss" scoped>
 .image {
     width: 100%;
     display: block;

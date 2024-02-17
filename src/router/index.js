@@ -154,9 +154,9 @@ const routes = [
       {
         path: 'CourseMain',
         name: 'CourseMain',
-        cnName: '做实验',
+        cnName: '实验成绩',
         meta: {
-          name: '做实验'
+          name: '实验成绩'
         },
         component: () => import('../views/Pages/TeacherView/checkStudentExp.vue')
       }
@@ -183,19 +183,29 @@ const routes = [
   {
     path: '/student',
     name: 'student',
-    cnName: '做实验',
+    cnName: '实验成绩',
     needRole: '0',
     component: Layout,
     children: [
       {
         path: 'StudentListMaintenance',
         name: 'StudentListMaintenance',
+        hidden:true,
         cnName: '做实验',
         meta: {
           name: '做实验'
         },
         component: () => import('../views/Pages/StudentView/studentView.vue')
-      }
+      },
+      {
+        path: '',
+        name: 'viewScore',
+        cnName: '查看成绩',
+        meta: {
+          name: '查看成绩'
+        },
+        component: () => import('../views/Pages/StudentView/viewScore.vue')
+      },
     ]
   },
   {

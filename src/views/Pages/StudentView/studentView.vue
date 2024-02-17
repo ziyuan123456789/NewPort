@@ -35,8 +35,9 @@
         </el-table-column>
       </el-table>
       <div style="text-align:center;margin-top:10px">
+        <el-button type="info" style="margin-right:20px">暂存成绩</el-button>
         <el-button type="success" style="margin-right:20px">提交</el-button>
-        <el-button type="success" style="margin-right:20px">提交报告</el-button>
+        <el-button type="warning" style="margin-right:20px">提交报告</el-button>
       </div>
       
     </el-form>
@@ -64,7 +65,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .box-card {
   margin: 20px;
   padding: 20px;

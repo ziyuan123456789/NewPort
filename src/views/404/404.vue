@@ -11,7 +11,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .not-found img{
     width: 100%;
     height: 90%;

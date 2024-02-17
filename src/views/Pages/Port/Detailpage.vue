@@ -2,11 +2,10 @@
     <el-container class="experiment-introduction-container">
         <el-main>
             <el-card class="experiment-info-card">
-
                 <div class="experiment-header">
                     <el-row :gutter="20">
                         <el-col :span="15">
-                            <h2 class="experiment-title">客货滚装码头前沿精细化布置实验系统</h2>
+                            <h1 class="experiment-title">客货滚装码头前沿精细化布置实验系统</h1>
                             <div class="experiment-meta">
                                 <div>作者:<em>Nue</em></div>
                                 <div>上线时间:<em>2024/2/9</em></div>
@@ -51,7 +50,7 @@
                             <div class="rating-score">
                                 <div class="score-big">4.7</div>
                                 <el-rate v-model="rating" show-score disabled></el-rate>
-                                <div class="rating-count">155人评价</div>
+
                             </div>
                         </el-col>
                         <el-col :span="8">
@@ -248,7 +247,7 @@ export default {
 
 
 
-<style scoped>
+<style scoped lang="less">
 .image-container {
     position: relative;
     height: 300px;
@@ -277,7 +276,7 @@ export default {
     margin-bottom: 10px;
 }
 
-.rating-count,
+
 .detail-item {
     color: #999;
     cursor: pointer;
@@ -348,7 +347,7 @@ export default {
     padding: 10px;
 }
 
-.experiment-title {}
+
 
 .experiment-introduction {
     text-indent: 2em;
