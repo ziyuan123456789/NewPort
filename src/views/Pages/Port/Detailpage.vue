@@ -5,17 +5,17 @@
                 <div class="experiment-header">
                     <el-row :gutter="20">
                         <el-col :span="15">
-                            <h1 class="experiment-title">客货滚装码头前沿精细化布置实验系统</h1>
+                            <h1 class="experiment-title">{{ info.experimentName }}</h1>
                             <div class="experiment-meta">
-                                <div>作者:<em>Nue</em></div>
-                                <div>上线时间:<em>2024/2/9</em></div>
+                                <div>作者:<em>{{ info.author }}</em></div>
+                                <div>上线时间:<em>{{ info.uptime }}</em></div>
                             </div>
                             <div class="experiment-categories">
-                                <el-tag>所属专业类:船舶</el-tag>
-                                <el-tag>所属课程:船舶</el-tag>
+                                <el-tag>所属专业类:{{ info.speciality }}</el-tag>
+                                <el-tag>所属课程:{{ info.course }}</el-tag>
                             </div>
                             <p class="experiment-introduction">
-                                模拟客货滚装码头前沿作业区行人流、车流的交通行为，支持实时显示交通流密度。利用实验教学平台，观测码头前沿作业状态，探究功能区划分以及交通组织形式对客货滚装码头交通流的影响，掌握客货滚装码头前沿装卸工艺流程，认识客货滚装码头的绿色评价指标
+                                {{ info.introduce }}
                             </p>
                             <el-button v-if="checkRole()" type="primary" icon="el-icon-edit"
                                 @click="doExperiment()">我要做实验</el-button>
@@ -26,11 +26,13 @@
 
                             <div class="image-container">
                                 <el-image
+                                v-if="info && info.pic"
                                 style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 200px; object-fit: cover;"
-                                :src="imgurl"
+                                :src="require('@/assets/Exp/' + info.pic)"
                                 :fit="fit">
                               </el-image>
                               
+
 
                             </div>
 
@@ -48,18 +50,18 @@
                     <div class="rating-overview">
                         <el-col :span="8">
                             <div class="rating-score">
-                                <div class="score-big">4.7</div>
-                                <el-rate v-model="rating" show-score disabled></el-rate>
+                                <div class="score-big">{{ info.stars }}</div>
+                                <el-rate v-model="info.stars" show-score disabled></el-rate>
 
                             </div>
                         </el-col>
                         <el-col :span="8">
                             <div class="rating-details">
-                                <div class="detail-item">浏览人数 43825</div>
-                                <div class="detail-item">实验人数 14799</div>
-                                <div class="detail-item">实验总数 4218</div>
-                                <div class="detail-item">实验平均时长 35'</div>
-                                <div class="detail-item">实验通过率 100%</div>
+                                <div class="detail-item">浏览人数 {{info.visitors}}</div>
+                        
+                                <div class="detail-item">实验总数 {{info.doNum}}</div>
+                                <div class="detail-item">实验完成数 {{info.completedNum}}</div>
+                                <div class="detail-item">实验通过率 {{(info.completedNum / info.doNum * 100).toFixed(2) + '%'}}</div>
                             </div>
                         </el-col>
                         <el-col :span="8" style="border-left: 1px solid #EEE;">
@@ -81,7 +83,7 @@
                 <el-col :span="16">
                     <el-card>
                         <div class="experiment-details">
-                            模拟客货滚装码头前沿作业区行人流、车流的交通行为，支持实时显示交通流密度。利用实验教学平台，观测码头前沿作业状态，探究功能区划分以及交通组织形式对客货滚装码头交通流的影响，掌握客货滚装码头前沿装卸工艺流程，认识客货滚装码头的绿色评价指标
+                            {{ info.introduce }}
                         </div>
                     </el-card>
                 </el-col>
@@ -151,12 +153,19 @@
 
 <script>
 import * as echarts from 'echarts';
-
+import { get, post, del, put } from '@/utils/request';
 export default {
+    props: {
+        id: {
+            type: [String, Number],
+            required: true
+        }
+    },
     name: 'RatingCard',
     data() {
         return {
-            imgurl: require('@/assets/Pages/port1.png'),
+            info:{},
+            // imgurl: require('@/assets/Pages/port1.png'),
             isNotLogin: false,
             rating: 4.7,
             pieChartData: [
@@ -169,12 +178,26 @@ export default {
         };
     },
     mounted() {
+        this.initInfo()
         this.initPieChart();
+        
     },
     computed: {
 
     },
     methods: {
+        initInfo() {
+            get('/getExperimentalInfoById', {id:this.id}, true).then(res => {
+                if (res.data.success === true) {
+                    this.info=res.data.data
+                } else {
+                    ElMessage({
+                        message: res.data.message,
+                        type: 'error',
+                    });
+                }
+            })
+        },
         checkRole() {
             const loginData = JSON.parse(localStorage.getItem("loginData"))
             if (loginData && loginData.role == '1') {

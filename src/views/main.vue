@@ -10,32 +10,33 @@
           <div class="section-title">热门实验</div>
           <el-row :gutter="20">
             <el-col :span="8" v-for="experiment in experiments" :key="experiment.id">
-              <!-- <el-card @mouseenter="handleMouseEnter(experiment.id)" @mouseleave="handleMouseLeave(experiment.id)" -->
-              <el-card :bordered="false" @click="toDetailPageById(experiment.id)"
+
+              <el-card @mouseenter="handleMouseEnter(experiment.id)" @mouseleave="handleMouseLeave(experiment.id)"
+                       :bordered="false" @click="toDetailPageById(experiment.id)"
                 :class="{ 'card-hover': experiment.hover }">
-                <img :src="experiment.image" class="card-image" alt="实验图片">
-                <div v-if="!experiment.hover" class="experiment-container">
-                  <span class="experiment-text">{{ experiment.title }}</span>
-                  <div class="bottom clearfix">
-                    <p class="info">
-                      <span class="author-name">晁耐霞</span>
-                      <span class="institution">广西医科大学</span>
-                    </p>
-                    <time class="time">{{ experiment.time }}</time>
+                <div>
+                  <img :src="experiment.image" class="card-image" alt="实验图片">
+                  <div class="experiment-container">
+                    <span class="experiment-text">{{ experiment.title }}</span>
+                    <div class="bottom clearfix">
+                      <p class="info">
+                        <span class="author-name">晁耐霞</span>
+                        <span class="institution">广西医科大学</span>
+                      </p>
+                      <time class="time">{{ experiment.time }}</time>
+                    </div>
+                  </div>
+                  <div v-show="experiment.hover" class="card-description">
+                    {{ experiment.description }}
                   </div>
                 </div>
-                <div v-if="experiment.hover" class="card-description">
-                  {{ experiment.description }}
-                </div>
+
               </el-card>
             </el-col>
           </el-row>
         </el-col>
         <el-col :span="6">
-          <!-- <div class="section-title">数据统计</div>
-          <div class="charts">
-            <div ref="pieChart" class="chart-container"></div>
-          </div> -->
+
           <el-row>
             <el-col :span="24">
               <div class="data-statistics">
@@ -67,14 +68,15 @@
 </template>
 
 <script>
-import * as echarts from 'echarts';
 import InfoCard from './Layout/InfoCard.vue'
+
 export default {
   components: {
     InfoCard,
   },
   data() {
     return {
+
       statistics: [
         { color: '#666', text: '教师数', number: 3 },
         { color: '#014DA6', text: '学生数', number: 32 },
@@ -86,9 +88,30 @@ export default {
         { color: '#E74400', text: '今日访问量', number: 3 },
       ],
       experiments: [
-        { id: 1, title: '海港航道数值仿真实验系统', image: require('@/assets/Exp/沿海.png'), time: '5.0分', description: '学生自行设计航道设计方案，应用船舶交通流仿真模型，挖掘航道线数、航道长度、通航水位、船舶航速等与航道通航效率的定量关系，为合理规划航道提供依据', hover: false },
-        { id: 2, title: '集装箱码头生产作业3D仿真实验', image: require('@/assets/Exp/集装箱.png'), time: '4.7分', description: '实验平台实现集装箱码头陆域装卸作业的3D仿真模拟，加深学生对集装箱码头装卸工艺的理解。应用实验教学平台，挖掘装卸机械配比及效率与港口作业效率的定量关系，掌握集装箱码头装卸工艺选择的量化指标与评价方法。', hover: false },
-        { id: 3, title: '客货滚装码头前沿精细化布置实验系统', image: require('@/assets/Exp/码头.png'), time: '4.7分', description: '模拟客货滚装码头前沿作业区行人流、车流的交通行为，支持实时显示交通流密度。利用实验教学平台，观测码头前沿作业状态，探究功能区划分以及交通组织形式对客货滚装码头交通流的影响，掌握客货滚装码头前沿装卸工艺流程，认识客货滚装码头的绿色评价指标', hover: false },
+        {
+          id: 1,
+          title: '海港航道数值仿真实验系统',
+          image: require('@/assets/Exp/海港.png'),
+          time: '5.0分',
+          description: '学生自行设计航道设计方案，应用船舶交通流仿真模型，挖掘航道线数、航道长度、通航水位、船舶航速等与航道通航效率的定量关系，为合理规划航道提供依据',
+          hover: false
+        },
+        {
+          id: 2,
+          title: '集装箱码头生产作业3D仿真实验',
+          image: require('@/assets/Exp/集装箱.png'),
+          time: '4.7分',
+          description: '实验平台实现集装箱码头陆域装卸作业的3D仿真模拟，加深学生对集装箱码头装卸工艺的理解。应用实验教学平台，挖掘装卸机械配比及效率与港口作业效率的定量关系，掌握集装箱码头装卸工艺选择的量化指标与评价方法。',
+          hover: false
+        },
+        {
+          id: 3,
+          title: '客货滚装码头前沿精细化布置实验系统',
+          image: require('@/assets/Exp/客货.png'),
+          time: '4.7分',
+          description: '模拟客货滚装码头前沿作业区行人流、车流的交通行为，支持实时显示交通流密度。利用实验教学平台，观测码头前沿作业状态，探究功能区划分以及交通组织形式对客货滚装码头交通流的影响，掌握客货滚装码头前沿装卸工艺流程，认识客货滚装码头的绿色评价指标',
+          hover: false
+        }
       ],
       hover: false,
     };
@@ -104,16 +127,16 @@ export default {
     handleMouseEnter(id) {
       this.experiments = this.experiments.map(experiment => ({
         ...experiment,
-        hover: experiment.id === id ? true : experiment.hover
+        hover: experiment.id === id
       }));
     },
+
     handleMouseLeave(id) {
       this.experiments = this.experiments.map(experiment => ({
         ...experiment,
-        hover: experiment.id === id ? false : experiment.hover
+        hover: false
       }));
     }
-
   }
 }
 </script>
